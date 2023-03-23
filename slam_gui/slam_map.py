@@ -29,6 +29,7 @@ async def read_item(request: Request):
 @app.get("/update_map")
 async def update():
     print("Update")
+    subprocess.check_output(["bash", 'map_server.sh'])
     subprocess.check_output(["bash", 'save_map.sh'])
 
     tif_file = glob.glob('./static/*.tif')[0]
@@ -47,7 +48,9 @@ if __name__ == "__main__":
     t1.start()
     time.sleep(5)
     print('Starting ROS Bridge')
-    input("Press Enter to continue...")
+    t2 = threading.Thread(target=run_script, args=('init_terminal2.sh',))
+    t2.setDaemon(True)
+    t2.start()
     time.sleep(5)
     print('Starting ROS2')
     t3 = threading.Thread(target=run_script, args=('init_terminal3.sh',))
@@ -60,4 +63,5 @@ if __name__ == "__main__":
         print('Stopping server')
         # Join threads
         t1.join()
+        t2.join()
         t3.join()
