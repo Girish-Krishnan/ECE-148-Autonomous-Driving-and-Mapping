@@ -14,8 +14,8 @@ import time
 from PIL import Image
 import glob
 
-def run_script(path):
-    subprocess.check_output(["bash", path])
+def run_script(path, cwd):
+    subprocess.call(['bash', path], cwd=cwd)
 
 app = FastAPI()
 # Add the static files directory
@@ -29,8 +29,7 @@ async def read_item(request: Request):
 @app.get("/update_map")
 async def update():
     print("Update")
-    subprocess.check_output(["bash", 'map_server.sh'])
-    subprocess.check_output(["bash", 'save_map.sh'])
+    run_script('save_map.sh', '/home/projects/ros1_ws')
 
     tif_file = glob.glob('./static/*.tif')[0]
 
@@ -43,17 +42,15 @@ async def update():
 
 if __name__ == "__main__":
     print('Starting server and initializing SLAM with ROS1')
-    t1 = threading.Thread(target=run_script, args=('init_terminal1.sh',))
+    t1 = threading.Thread(target=run_script, args=('init_terminal1.sh','/home/projects/ros1_ws'))
     t1.setDaemon(True)
     t1.start()
     time.sleep(5)
     print('Starting ROS Bridge')
-    t2 = threading.Thread(target=run_script, args=('init_terminal2.sh',))
-    t2.setDaemon(True)
-    t2.start()
+    input('Press enter to continue')
     time.sleep(5)
     print('Starting ROS2')
-    t3 = threading.Thread(target=run_script, args=('init_terminal3.sh',))
+    t3 = threading.Thread(target=run_script, args=('init_terminal3.sh','/home/projects/ros2_ws'))
     t3.setDaemon(True)
     t3.start()
     
@@ -63,5 +60,4 @@ if __name__ == "__main__":
         print('Stopping server')
         # Join threads
         t1.join()
-        t2.join()
         t3.join()
