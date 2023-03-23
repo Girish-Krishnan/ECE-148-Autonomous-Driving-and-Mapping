@@ -13,9 +13,12 @@ import threading
 import time
 from PIL import Image
 import glob
+import os
 
 def run_script(path, cwd):
-    subprocess.call(['bash', path], cwd=cwd)
+    # Use subprocess to run the script and ger the output
+    os.chdir(cwd)
+    subprocess.check_output(["bash", path])
 
 app = FastAPI()
 # Add the static files directory
