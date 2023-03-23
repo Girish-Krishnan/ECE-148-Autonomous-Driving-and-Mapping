@@ -1,1 +1,2 @@
+source_ros1
 roslaunch ucsd_robocar_nav1_pkg ros_racer_mapping_launch.launch
