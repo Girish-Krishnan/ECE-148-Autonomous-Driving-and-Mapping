@@ -17,7 +17,7 @@ import os
 
 def run_script(path, cwd):
     # Use subprocess to run the script and ger the output
-    os.chdir(cwd)
+    # Get abs path of current dir
     subprocess.check_output(["bash", path])
 
 app = FastAPI()
