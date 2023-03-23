@@ -1,0 +1,5 @@
+.DS_Store
+.vs_code
+.vscode
+credentials.env
+__pycache__
